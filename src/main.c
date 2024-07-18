@@ -14,16 +14,9 @@
 
 #define OPTPARSE_IMPLEMENTATION
 #define OPTPARSE_API static
-#include "optparse/optparse.h"
-
-#include "envcheck.h"
-#include "ext.h"
+#include "optparse.h"
 
 #include "main.h"
-
-#include "conv.h"
-
-u8 original_order_count = 0, order_count = 0, sample_count = 0, pattern_count = 0;
 
 internal_state_t main_context;
 
@@ -54,8 +47,6 @@ u16 s3m_pcm_lens[S3M_MAXSMP] = {0};
 u16 s3m_cwtv;
 
 static char input_filename[4096], output_filename[4096];
-
-int check_valid_s3m(FILE* S3Mfile);
 
 int convert_s3m_to_stm(internal_state_t* context);
 int convert_s3m_to_stx(internal_state_t* context);
@@ -97,16 +88,12 @@ int main(int argc, char* argv[]) {
   outfile = fopen(output_filename, "wb");
 
   if (!infile || !outfile) {
-    return_value |= FOC_OPEN_FAILURE;
     perror("Failed to open file");
-    exit(EXIT_FAILURE);
+    exit(FOC_OPEN_FAILURE);
   }
 
   main_context.infile = infile;
   main_context.outfile = outfile;
-  main_context.conversion_type = conversion_type;
-
-  srand((u32)time(0));
 
   switch (conversion_type) {
     case FOC_S3MTOSTM: return_value |= convert_s3m_to_stm(&main_context); break;
@@ -117,26 +104,4 @@ int main(int argc, char* argv[]) {
   fclose(outfile);
 
   return return_value;
-}
-
-int check_valid_s3m(FILE* S3Mfile) {
-  char scrm[4] = {0};
-
-  if (!S3Mfile)
-    return FOC_MALFORMED_FILE;
-
-  (void)!fseek(S3Mfile, 44, SEEK_SET);
-
-  if (fread(scrm, sizeof(char), 4, S3Mfile) != 4) {
-    print_error("Failed to read S3M header!");
-    return FOC_MALFORMED_FILE;
-  };
-
-  if (memcmp(scrm, "SCRM", 4)) {
-    print_error("This is not an S3M file!");
-    return FOC_NOT_S3M_FILE;
-  }
-
-  rewind(S3Mfile);
-  return FOC_SUCCESS;
 }
