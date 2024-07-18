@@ -1,3 +1,3 @@
-[submodule "Screamverter"]
+[submodule "libtrkcvt"]
 	path = libtrkcvt
 	url = https://github.com/RepellantMold/libtrkcvt.git
