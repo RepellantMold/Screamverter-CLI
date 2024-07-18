@@ -9,6 +9,7 @@
 - [ ] add a channel remap system if there's muted channels, it would prevent someone from muting the first 4 channels and breaking the conversion
 - [ ] work on stx conversion (and switch based on file extension of the output file)
 - [ ] work on converting the S3M tempo to be scaling factor in STM
+- [ ] convert any 16-bit samples to 8-bit samples
 
 ### in progress
 
@@ -19,4 +20,4 @@
 - [x] work on sign conversion with the samples
 - [x] have the order conversion discard markers
 - [x] work on pattern conversion
-- [x] sample header conversion (the parapointers at the end of the header; how do we handle them?)
+- [x] sample header conversion

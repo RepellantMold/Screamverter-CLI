@@ -42,24 +42,25 @@ screamverter [options] -i<inputfile> -o<outputfile>
 > - No panning (Scream Tracker 2/Scream Tracker Music Interface Kit is mono) or Adlib.
 > - Sample names are gonna truncated heavily to 12 characters if its file name field is blank.
 > - You can only use effects A - J, with some caveats with the table shown below.
+> - This converter strips out all end markers on the order list, which may not be desired unless you add a `Bxx` to the last pattern you intend for the listener.
 >
 > | Effect | Function in ST2/STMIK - in ST3/others | Notes/Quirks (Effect memory **does not exist** in Scream Tracker 2, so a parameter of 0 will act like a no-op for any effect that normally has it. (e.g. volume slide, portamento slides, vibrato, etc.)) |
 > |---:|:---:|---|
-> | Axx | Set speed - Set ticks per row | It has a scaling factor (TODO: handle it) alongside setting ticks per row. |
-> | Bxx | Set next order - Position jump | It does not perform an immediate pattern break unlike most other trackers, so it's best to place it alongside a Pattern break. |
-> | Cxx | Pattern break | The parameter is ignored which is identical behavior to NoiseTracker. |
-> | Dxy | Volume slide | There's no fine slides, and y will take priority if both x and y are specified (which is backwards from how it's usually handled). |
-> | Exx | Portamento down | This effect can cause the note period to underflow, and there are no fine/extra-fine slides. |
-> | Fxx | Portamento up | This effect can cause the note period to overflow, ditto for fine/extra-fine slides. |
-> | Gxx | Tone portamento | It does not reset the sample volume unlike most other trackers. |
-> | Hxy | Vibrato | The depth is doubled compared to other trackers, this converter will attempt to adjust the depth accordingly. |
-> | Ixy | Tremor | A parameter of 0 will be a very fast tremor, like old Scream Tracker 3. |
-> | Jxy | Arpeggio | The effect behaves strangely since it tends to skip to y halfway through a row if x was 0, it's not commonly implemented this way however. |
-> | Kxx | (No-op) | This can be entered into the editor but it does not do anything, **it also bugs out Scream Tracker 3 when importing so it's best to not use it!** |
-> | Lxx | (No-op) | Ditto. |
-> | Mxx | (No-op) | Ditto. |
-> | Nxx | (No-op) | Ditto. |
-> | Oxx | (No-op) | Ditto. |
+> | `Axx` | Set speed - Set ticks per row | It has a scaling factor (TODO: somehow get tempo to approximate in said scaling factor) alongside setting ticks per row . |
+> | `Bxx` | Set next order - Position jump | It does not perform an immediate pattern break unlike most other trackers, so it's best to place it alongside a Pattern break. |
+> | `Cxx` | Pattern break | The parameter is ignored which is identical behavior to NoiseTracker. |
+> | `Dxy` | Volume slide | There's no fine slides, and `y` will take priority if both `x` and `y` are specified. |
+> | `Exx` | Portamento down | This effect can cause the note period to underflow, and there are no fine/extra-fine slides. |
+> | `Fxx` | Portamento up | This effect can cause the note period to overflow, ditto for fine/extra-fine slides. |
+> | `Gxx` | Tone portamento | It does not reset the sample volume unlike most other trackers. |
+> | `Hxy` | Vibrato | The depth is doubled compared to other trackers, this converter will attempt to adjust the depth accordingly. |
+> | `Ixy` | Tremor | A parameter of 0 will be a very fast tremor, like old Scream Tracker 3. |
+> | `Jxy` | Arpeggio | The effect behaves strangely since it tends to skip to y halfway through a row if `x` was 0, and just implemented strangely in general. |
+> | `Kxx` | (No-op) | This can be entered into the editor but it does not do anything, **it also bugs out Scream Tracker 3's importer so it's best to not use it!** |
+> | `Lxx` | (No-op) | Ditto. |
+> | `Mxx` | (No-op) | Ditto. |
+> | `Nxx` | (No-op) | Ditto. |
+> | `Oxx` | (No-op) | Ditto. |
 
 ## Maintainers
 

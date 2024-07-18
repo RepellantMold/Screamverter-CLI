@@ -6,7 +6,7 @@
 
 #include "ext.h"
 #include "file.h"
-#include "log.h"
+
 #include "parapnt.h"
 #include "pattern.h"
 #include "sample.h"

@@ -11,8 +11,8 @@ static void handle_patterns_s3mtostm(internal_state_t* context);
 
 int convert_s3m_to_stm(internal_state_t* context) {
   FILE *S3Mfile = context->infile, *STMfile = context->outfile;
-  const u8 sample_count = context->statistics.sample_count;
-  const u8 pattern_count = context->statistics.pattern_count;
+  const u8 sample_count = context->stats.sample_count;
+  const u8 pattern_count = context->stats.pattern_count;
   if (!S3Mfile || !STMfile)
     return FOC_OPEN_FAILURE;
   if (ferror(S3Mfile) || ferror(STMfile))
@@ -24,7 +24,7 @@ int convert_s3m_to_stm(internal_state_t* context) {
 
   if (sample_count > STM_MAXSMP)
     fprintf(stderr, "Sample count exceeds 31 (%u > 31), only using 31.\n", sample_count);
-  context->statistics.pattern_count = (u8)s3m_song_header.total_patterns;
+  context->stats.pattern_count = (u8)s3m_song_header.total_patterns;
   if (pattern_count > STM_MAXPAT)
     fprintf(stderr, "Pattern count exceeds 63 (%u > 63), only converting 63.\n", pattern_count);
 
@@ -36,7 +36,7 @@ int convert_s3m_to_stm(internal_state_t* context) {
 
   handle_sample_headers_s3mtostm(context, stm_song_header.instruments);
 
-  convert_song_orders_s3mtostm(context->statistics.original_order_count);
+  convert_song_orders_s3mtostm(context->stats.original_order_count);
   fwrite(stm_order_list, sizeof(u8), sizeof(stm_order_list), STMfile);
 
   handle_patterns_s3mtostm(context);
@@ -54,7 +54,7 @@ static void handle_sample_headers_s3mtostm(internal_state_t* context, stm_instru
   register usize i = 0;
 
   for (; i < STM_MAXSMP; i++) {
-    if (i >= context->statistics.sample_count) {
+    if (i >= context->stats.sample_count) {
       generate_blank_stm_instrument(&stm_instrument_header[i]);
       goto skiptowritingsampleheader;
     }
@@ -81,7 +81,7 @@ static void handle_patterns_s3mtostm(internal_state_t* context) {
   register usize i = 0;
 
   for (i = 0; i < STM_MAXPAT; i++) {
-    if (i >= context->statistics.pattern_count)
+    if (i >= context->stats.pattern_count)
       break;
     printf("Converting pattern %lu...\n", (u32)i);
     parse_s3m_pattern(S3Mfile, s3m_pat_pointers[i]);
@@ -100,7 +100,7 @@ static int handle_pcm_s3mtostm(internal_state_t* context) {
   u16 stm_pcm_pointers[STM_MAXSMP] = {0};
 
   for (; i < STM_MAXSMP; i++) {
-    if (i >= context->statistics.sample_count)
+    if (i >= context->stats.sample_count)
       break;
 
     sample_len = s3m_pcm_lens[i];
