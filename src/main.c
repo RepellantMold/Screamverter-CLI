@@ -20,7 +20,7 @@
 
 internal_state_t main_context;
 
-void print_help(void) {
+static void print_help(void) {
   puts("Usage: screamverter [options] -i<inputfile> -o<outputfile>");
   puts("(C) RepellantMold/cs127, 2024");
   puts("Licensed under ISC");
